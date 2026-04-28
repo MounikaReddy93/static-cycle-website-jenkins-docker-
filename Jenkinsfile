@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         IMAGE_NAME = "jenkins-cicd-demo"
+        DOCKER_REPO = "mouni668645/jenkins-cicd-demo
     }
     stages {
         stage('checkout code') {
@@ -44,13 +45,19 @@ pipeline {
                 '''
             }
         }
-    }
-    post {
-        success {
-            echo "✅ Quality Gate PASSED → Docker image built successfully"
+        stage('Docker Push (Docker Hub)') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    docker tag ${IMAGE_NAME}:latest ${DOCKER_REPO}:latest
+                    docker push ${DOCKER_REPO}:latest
+                    '''
+                }
+            }
         }
-        failure {
-            echo "❌ Quality Gate FAILED → Docker build skipped"
-        }
     }
-}
