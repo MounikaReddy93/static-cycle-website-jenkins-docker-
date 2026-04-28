@@ -4,7 +4,7 @@ pipeline {
         maven 'maven'
     }
     environment {
-        IMAGE_NAME = "jenkins-CICD-demo"
+        IMAGE_NAME = "jenkins-cicd-demo"
     }
     stages {
         stage('checkout code') {
