@@ -5,7 +5,7 @@ pipeline {
     }
     environment {
         IMAGE_NAME = "jenkins-cicd-demo"
-        DOCKER_REPO = "mouni668645/jenkins-cicd-demo
+        DOCKER_REPO = "mouni668645/jenkins-cicd-demo"
     }
     stages {
         stage('checkout code') {
@@ -61,3 +61,4 @@ pipeline {
             }
         }
     }
+}
