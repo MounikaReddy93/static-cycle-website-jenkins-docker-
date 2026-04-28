@@ -3,6 +3,9 @@ pipeline {
     tools {
         maven 'maven'
     }
+    environment {
+        IMAGE_NAME = "jenkins-CICD-demo"
+    }
     stages {
         stage('checkout code') {
             steps {
@@ -36,9 +39,18 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'This runs ONLY if Quality Gate PASSES'
+                sh '''
+                docker build -t ${IMAGE_NAME}:latest .
+                '''
             }
         }
     }
+    post {
+        success {
+            echo "✅ Quality Gate PASSED → Docker image built successfully"
+        }
+        failure {
+            echo "❌ Quality Gate FAILED → Docker build skipped"
+        }
+    }
 }
-
