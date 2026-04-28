@@ -26,10 +26,19 @@ pipeline {
             }
           }
         }
-        stage('Test') {
+        
+       stage('Quality Gate') {
             steps {
-                echo 'Hello World'
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'This runs ONLY if Quality Gate PASSES'
             }
         }
     }
 }
+
