@@ -1,17 +1,22 @@
 package com.example;
 
+import com.sun.net.httpserver.HttpServer;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+
 public class App {
-    public static void main(String[] args) {
-        System.out.println("Application started successfully!");
-        
-        // Keep app running (important for containers)
-        while (true) {
-            try {
-                Thread.sleep(10000);
-                System.out.println("App is running...");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    public static void main(String[] args) throws Exception {
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+
+        server.createContext("/", exchange -> {
+            String response = "Hello from Kubernetes CI/CD!";
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        });
+
+        server.start();
+        System.out.println("Server started on port 8080");
     }
 }
